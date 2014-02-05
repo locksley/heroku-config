@@ -34,6 +34,9 @@ class Heroku::Command::Config
     overwrite   = options[:overwrite]
     env         = options[:env] || ".env"
 
+    p options
+    p env
+
     config = merge_config(local_config(env: env), remote_config, interactive, overwrite)
     write_remote_config config
     display "Config in #{env} written to #{app}"
