@@ -32,16 +32,17 @@ class Heroku::Command::Config
   def push
     interactive = options[:interactive]
     overwrite   = options[:overwrite]
+    env         = options[:env] || ".env"
 
-    config = merge_config(local_config, remote_config, interactive, overwrite)
+    config = merge_config(local_config(env), remote_config, interactive, overwrite)
     write_remote_config config
-    display "Config in .env written to #{app}"
+    display "Config in #{env} written to #{app}"
   end
 
 private ######################################################################
 
-  def local_config
-    File.read(".env").split("\n").inject({}) do |hash, line|
+  def local_config(env: ".env")
+    File.read(env).split("\n").inject({}) do |hash, line|
       if line =~ /\A([A-Za-z0-9_]+)=(.*)\z/
         hash[$1] = $2
       end
